@@ -44,3 +44,30 @@ class TestBooksCollector:
     def test_get_book_genre_non_existing(self):
         collector = BooksCollector()
         assert collector.get_book_genre("Название книги") is None
+
+
+    @pytest.mark.parametrize("genre, expected", [("Фантастика", ["Название книги"]), ("Ужасы", [])])
+    def test_get_books_with_specific_genre(self, genre, expected):
+        collector = BooksCollector()
+        collector.add_new_book("Название книги")
+        collector.set_book_genre("Название книги", "Фантастика")
+        assert collector.get_books_with_specific_genre(genre) == expected
+
+    def test_get_books_genre(self):
+        collector = BooksCollector()
+        collector.add_new_book("Книга 1")
+        collector.add_new_book("Книга 2")
+        collector.set_book_genre("Книга 1", "Фантастика")
+        assert collector.get_books_genre() == {"Книга 1": "Фантастика", "Книга 2": ""}
+
+    @pytest.mark.parametrize("genre_age_rating", [True, False])
+    def test_get_books_for_children(self, genre_age_rating):
+        collector = BooksCollector()
+        collector.add_new_book("Книга 1")
+        collector.add_new_book("Книга 2")
+        collector.set_book_genre("Книга 1", "Фантастика")
+        collector.set_book_genre("Книга 2", "Ужасы")
+        if genre_age_rating:
+            assert collector.get_books_for_children() == ["Книга 1"]
+        else:
+            assert collector.get_books_for_children() == ["Книга 1", "Книга 2"]
