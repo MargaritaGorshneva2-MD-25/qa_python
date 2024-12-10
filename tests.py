@@ -71,3 +71,35 @@ class TestBooksCollector:
             assert collector.get_books_for_children() == ["Книга 1"]
         else:
             assert collector.get_books_for_children() == ["Книга 1", "Книга 2"]
+
+    def test_add_book_in_favorites(self):
+        collector = BooksCollector()
+        collector.add_new_book("Название книги")
+        collector.add_book_in_favorites("Название книги")
+        assert collector.get_list_of_favorites_books() == ["Название книги"]
+
+    def test_add_book_in_favorites_duplicate(self):
+        collector = BooksCollector()
+        collector.add_new_book("Название книги")
+        collector.add_book_in_favorites("Название книги")
+        collector.add_book_in_favorites("Название книги")
+        assert collector.get_list_of_favorites_books() == ["Название книги"]
+
+    def test_delete_book_from_favorites(self):
+        collector = BooksCollector()
+        collector.add_new_book("Название книги")
+        collector.add_book_in_favorites("Название книги")
+        collector.delete_book_from_favorites("Название книги")
+        assert collector.get_list_of_favorites_books() == []
+
+    def test_delete_book_from_favorites_non_existing(self):
+        collector = BooksCollector()
+        collector.delete_book_from_favorites("Название книги")
+        assert collector.get_list_of_favorites_books() == []
+
+    def test_get_list_of_favorites_books(self):
+        collector = BooksCollector()
+        collector.add_new_book("Книга 1")
+        collector.add_new_book("Книга 2")
+        collector.add_book_in_favorites("Книга 1")
+        assert collector.get_list_of_favorites_books() == ["Книга 1"]
